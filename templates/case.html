@@ -379,6 +379,39 @@
 
             </div>
 
+              <!-- Custom bussinse rule violation -->
+              {% if Custom_BR_flag%}
+               <strong style="font-size:130%">Custom Business Rules Violation</strong>
+
+
+            <div class="box-body table-responsive no-padding">
+
+                {% if Custom_BR_flag == False %}
+                No Custom Bussinse Rules Violation
+                {% endif %}
+                {% if Custom_BR_flag %}
+              <table class="table table-hover">
+
+                <tr>
+                  <th>Rules </th>
+
+                </tr>
+                   {% for each in Custom_BR %}
+                <tr>
+                  <td>{{ each}}</td>
+
+
+
+                </tr>
+                  {% endfor %}
+               {%endif %}
+
+
+              </table>
+
+            </div>
+              {% endif %}
+
               <div class="box-footer">
               <div style="margin-left:38%;">
 

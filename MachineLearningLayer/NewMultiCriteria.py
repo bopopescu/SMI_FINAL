@@ -17,6 +17,7 @@ class NewMultiCriteria:
         self.sumOfFlags = 0
         self.saving_transaction = pd.DataFrame() #for saving client suspsious transactions
         self.transaction_IDs=[]
+        self.allRules=''
 
 
 
@@ -44,6 +45,7 @@ class NewMultiCriteria:
         for each in self.data:
             print('Rule statement',self.data['Rule{}'.format(i)])
             flag = self.checkRule(self.data['Rule{}'.format(i)],self.client_df,clientID)
+            self.allRules = self.allRules + str(flag)
             print('Rule flag',flag)
             print('******************')
             self.sumOfFlags = self.sumOfFlags + flag
@@ -83,6 +85,13 @@ class NewMultiCriteria:
         print(self.saving_transaction)
 
 
+        if self.sumOfFlags > 0:
+            self.cur.execute("UPDATE SMI_DB.Client SET custom_BR='%s' where clientID='%s'" % (self.allRules, self.clientID))
+            self.db.commit()
+
+        return MultiCriteriaScore, self.allRules
+
+
 
     def checkRule(self,rule, client_transaction,clientID):
 
@@ -91,114 +100,108 @@ class NewMultiCriteria:
         self.client_transaction = client_transaction
         self.cur.execute("SELECT * FROM SMI_DB.SuspiciousTransaction WHERE clientID=%s " % (clientID))
         self.client_suspious_transaction = self.cur.fetchall()
+        for row in self.client_suspious_transaction:
+            self.transaction_IDs.append(row[15])
+        #print('Transactions ID', self.transaction_IDs)
         flag =0
 
 
         ##### opreands mapping ######
         if self.rule[1] == operands[0]: #==#
-            print("Inside == operand")
+            #print("Inside == operand")
             if (self.client_transaction[self.rule[0]] == self.rule[2]).any():
-                for row in self.client_suspious_transaction:
-                    self.transaction_IDs.append(row[15])
-                print('Transactions ID', self.transaction_IDs)
+
                 ### Saving suspicious transaction ###
                 self.saving_transaction = pd.DataFrame(self.client_transaction[self.client_transaction[self.rule[0]] > self.rule[2]])
-                print('Before checking Database', self.saving_transaction)
+                #print('Before checking Database', self.saving_transaction)
                 for index, row in self.saving_transaction.iterrows():
-                    print('transactions ID', row["transactionID"])
+                    #print('transactions ID', row["transactionID"])
                     if (row["transactionID"] in self.transaction_IDs):
-                        print(row["transactionID"], 'Found in database')
+                        #print(row["transactionID"], 'Found in database')
                         self.saving_transaction = self.saving_transaction[self.saving_transaction.transactionID != row["transactionID"]]
                 self.saving_transaction.to_sql(name='suspicioustransaction', con=self.engine,if_exists='append', index=False)
 
 
-                print('After checking Database')
-                print(self.saving_transaction)
+                #print('After checking Database')
+                #print(self.saving_transaction)
                 flag = 1
+
 
 
         if self.rule[1] == operands[5]:#<#
             if (self.client_transaction[self.rule[0]] < self.rule[2]).any():
-                for row in self.client_suspious_transaction:
-                    self.transaction_IDs.append(row[15])
-                print('Transactions ID', self.transaction_IDs)
                 ### Saving suspicious transaction ###
                 self.saving_transaction = pd.DataFrame(self.client_transaction[self.client_transaction[self.rule[0]] > self.rule[2]])
-                print('Before checking Database', self.saving_transaction)
+                #print('Before checking Database', self.saving_transaction)
                 for index, row in self.saving_transaction.iterrows():
-                    print('transactions ID', row["transactionID"])
+                    #print('transactions ID', row["transactionID"])
                     if (row["transactionID"] in self.transaction_IDs):
-                        print(row["transactionID"], 'Found in database')
+                        #print(row["transactionID"], 'Found in database')
                         self.saving_transaction = self.saving_transaction[self.saving_transaction.transactionID != row["transactionID"]]
                 self.saving_transaction.to_sql(name='suspicioustransaction', con=self.engine,if_exists='append', index=False)
 
 
-                print('After checking Database')
-                print(self.saving_transaction)
+                #print('After checking Database')
+                #print(self.saving_transaction)
                 flag = 1
+
 
 
         if self.rule[1] == operands[6]:#>#
              if (self.client_transaction[self.rule[0]] > self.rule[2]).any():
-                for row in self.client_suspious_transaction:
-                    self.transaction_IDs.append(row[15])
-                print('Transactions ID', self.transaction_IDs)
                 ### Saving suspicious transaction ###
                 self.saving_transaction = pd.DataFrame(self.client_transaction[self.client_transaction[self.rule[0]] > self.rule[2]])
-                print('Before checking Database', self.saving_transaction)
+                #print('Before checking Database', self.saving_transaction)
                 for index, row in self.saving_transaction.iterrows():
-                    print('transactions ID', row["transactionID"])
+                    #print('transactions ID', row["transactionID"])
                     if (row["transactionID"] in self.transaction_IDs):
-                        print(row["transactionID"], 'Found in database')
+                        #print(row["transactionID"], 'Found in database')
                         self.saving_transaction = self.saving_transaction[self.saving_transaction.transactionID != row["transactionID"]]
                 self.saving_transaction.to_sql(name='suspicioustransaction', con=self.engine,if_exists='append', index=False)
 
 
-                print('After checking Database')
-                print(self.saving_transaction)
+                #print('After checking Database')
+                #print(self.saving_transaction)
                 flag = 1
+
 
         if self.rule[1] == operands[7]:#<=#
             if (self.client_transaction[self.rule[0]] <= self.rule[2]).any():
-                for row in self.client_suspious_transaction:
-                    self.transaction_IDs.append(row[15])
-                print('Transactions ID', self.transaction_IDs)
                 ### Saving suspicious transaction ###
                 self.saving_transaction = pd.DataFrame(self.client_transaction[self.client_transaction[self.rule[0]] > self.rule[2]])
-                print('Before checking Database', self.saving_transaction)
+                #print('Before checking Database', self.saving_transaction)
                 for index, row in self.saving_transaction.iterrows():
-                    print('transactions ID', row["transactionID"])
+                    #print('transactions ID', row["transactionID"])
                     if (row["transactionID"] in self.transaction_IDs):
-                        print(row["transactionID"], 'Found in database')
+                        #print(row["transactionID"], 'Found in database')
                         self.saving_transaction = self.saving_transaction[self.saving_transaction.transactionID != row["transactionID"]]
                 self.saving_transaction.to_sql(name='suspicioustransaction', con=self.engine,if_exists='append', index=False)
 
 
-                print('After checking Database')
-                print(self.saving_transaction)
+                #print('After checking Database')
+                #print(self.saving_transaction)
                 flag = 1
+
 
         if self.rule[1] == operands[8]:  # >=#
             if (self.client_transaction[self.rule[0]] >= self.rule[2]).any():
-                for row in self.client_suspious_transaction:
-                    self.transaction_IDs.append(row[15])
-                print('Transactions ID', self.transaction_IDs)
                 ### Saving suspicious transaction ###
                 self.saving_transaction = pd.DataFrame(
                     self.client_transaction[self.client_transaction[self.rule[0]] > self.rule[2]])
-                print('Before checking Database', self.saving_transaction)
+                #print('Before checking Database', self.saving_transaction)
                 for index, row in self.saving_transaction.iterrows():
-                    print('transactions ID', row["transactionID"])
+                    #print('transactions ID', row["transactionID"])
                     if (row["transactionID"] in self.transaction_IDs):
-                        print(row["transactionID"], 'Found in database')
+                        #print(row["transactionID"], 'Found in database')
                         self.saving_transaction = self.saving_transaction[
                             self.saving_transaction.transactionID != row["transactionID"]]
                 self.saving_transaction.to_sql(name='suspicioustransaction', con=self.engine, if_exists='append',
                                                index=False)
 
-                print('After checking Database')
-                print(self.saving_transaction)
+                #print('After checking Database')
+                #print(self.saving_transaction)
                 flag = 1
+
 
 
         return flag
@@ -210,7 +213,7 @@ class NewMultiCriteria:
 
 
 ###### Calling ########
-firebase = firebaseConnection()
+'''firebase = firebaseConnection()
 fb = firebase.database()
 Rules = fb.child('Rules').get().val()
 sanctionList = fb.child('sanctionList').get().val()
@@ -218,4 +221,6 @@ highRiskCountries = fb.child('highRiskCountries').get().val()
 MultiLevelRules = fb.child('MultiLevelRules').get().val()
 
 a = NewMultiCriteria()
-mc_score = a.getRules(Rules,sanctionList,highRiskCountries,MultiLevelRules,1966002811)
+mc_score, rules = a.getRules(Rules,sanctionList,highRiskCountries,MultiLevelRules,1966002811)
+
+print(rules)'''

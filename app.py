@@ -711,7 +711,7 @@ def case(id):
     client_ID = data[0][3]
 
     profileLabel=''
-    if data[0][1] == 'Low':#Need to change it Meduim
+    if data[0][1] == 'Medium':#Meduim
         profileLabel ='label label-warning'
     else:#High
         profileLabel = 'label label-danger'
@@ -720,11 +720,16 @@ def case(id):
     data2 = cur.fetchall()
 
     client_BR = data2[0][5]
+    client_custom_BR = data2[0][6]
+    print('client_custom_BR',client_custom_BR)
     Br_flag = True
+    Custom_BR_flag =True
     print('Br', client_BR)
     Br_dic = {}
+    Custom_BR=[]
     if client_BR == '0000':
         Br_flag = False
+
     else:
         if client_BR[0] == '1':
             Br_dic['1'] = 'Client Name is in sanction list'
@@ -735,11 +740,23 @@ def case(id):
         if client_BR[3] == '1':
             Br_dic['4'] = 'Client exceeded max amount of transaction'
 
+    if client_custom_BR is None:
+        Custom_BR_flag = False
+
+    else:
+        i = 1
+        for each in client_custom_BR:
+            # print(each)
+            if each == '1':
+                print('found', i)
+                Custom_BR.append('Rule{}'.format(i))
+            i = i + 1
+
     cur.execute("SELECT * FROM SuspiciousTransaction WHERE clientID=%s " % (client_ID))
     transaction = cur.fetchall()
 
     return render_template("case.html",data= data, data2= data2, label= profileLabel, clientId = client_ID
-                           ,caseId = id ,transaction=transaction, form2=search_form ,alert = totalAlert, Br_flag=Br_flag ,Br_dic=Br_dic)
+                           ,caseId = id ,transaction=transaction, form2=search_form ,alert = totalAlert, Br_flag=Br_flag ,Br_dic=Br_dic,Custom_BR_flag=Custom_BR_flag,Custom_BR=Custom_BR)
 
 
 @app.route('/download/<id>', methods=['GET','POST'])

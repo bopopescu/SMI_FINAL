@@ -38,7 +38,7 @@ class DecisionTree:
 
 
 
-                                #testX = pd.read_csv('testingRecordes.csv')
+        #testX = pd.read_csv('testingRecordes.csv')
 
 
         ######## SAVE THE MODEL  ###########
@@ -68,9 +68,22 @@ class DecisionTree:
         cur1, db1, engine2 = connection2()
         #cur1.execute('DROP TABLE `SMI_DB`.`SuspiciousTransaction`')
 
-        db1.commit()
+        '''db1.commit()
         cur1.close()
-        db1.close()
+        db1.close()'''
+
+        ##### to avoid saving duplicate transactions #####
+        transaction_IDs=[]
+        cur1.execute("SELECT * FROM SMI_DB.suspicioustransaction ")
+        all_suspious_transaction_df = cur1.fetchall()
+        for row in all_suspious_transaction_df:
+            transaction_IDs.append(row[15])
+
+        for index, row in suspiciousTransactions.iterrows():
+            if (row["transactionID"] in transaction_IDs):
+                print(row["transactionID"], 'Found in database')
+                suspiciousTransactions = suspiciousTransactions[suspiciousTransactions.transactionID != row["transactionID"]]
+
 
         suspiciousTransactions.to_sql(name='SuspiciousTransaction', con=engine2, if_exists='append',
                                          index=False)
