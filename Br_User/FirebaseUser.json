@@ -1,0 +1,8 @@
+{
+  "Rules" : {
+    "Rule1" : [ "amount", ">", 200000 ],
+    "Rule2" : [ "amount", "==", 552874.41],
+    "Rule3" : [ "amount", "==" , 150491.92 ]
+  },"sanctionList" : ["Noura Alharbi","Nasser"],
+  "HighRiskCountries":[]
+}
