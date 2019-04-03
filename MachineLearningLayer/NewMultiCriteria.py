@@ -18,14 +18,12 @@ class NewMultiCriteria:
         self.saving_transaction = pd.DataFrame() #for saving client suspsious transactions
         self.transaction_IDs=[]
 
-        #print(self.df.columns)
-        #print(self.saving_transaction)
 
 
         for each in recored:
             self.clientIDs.append(each[7])
 
-        #print('Id',self.clientIDs)
+
 
 
 
@@ -41,9 +39,7 @@ class NewMultiCriteria:
         self.client_df = self.df[self.df['clientID']== self.clientID].drop_duplicates(keep='first')
         self.sanctionList = sanctionList
         self.highRiskCountries = highRiskCountries
-        #self.client_suspious_transaction
 
-        #print(self.client_df)
 
         for each in self.data:
             print('Rule statement',self.data['Rule{}'.format(i)])
@@ -89,18 +85,19 @@ class NewMultiCriteria:
 
 
     def checkRule(self,rule, client_transaction,clientID):
-        operands = ['==', 'not', 'or', 'in', 'and', '<', '>', '<=', '>=']
 
+        operands = ['==', 'not', 'or', 'in', 'and', '<', '>', '<=', '>=']
         self.rule = rule
         self.client_transaction = client_transaction
+        self.cur.execute("SELECT * FROM SMI_DB.SuspiciousTransaction WHERE clientID=%s " % (clientID))
+        self.client_suspious_transaction = self.cur.fetchall()
         flag =0
+
 
         ##### opreands mapping ######
         if self.rule[1] == operands[0]: #==#
             print("Inside == operand")
             if (self.client_transaction[self.rule[0]] == self.rule[2]).any():
-                self.cur.execute("SELECT * FROM SMI_DB.SuspiciousTransaction WHERE clientID=%s " % (clientID))
-                self.client_suspious_transaction = self.cur.fetchall()
                 for row in self.client_suspious_transaction:
                     self.transaction_IDs.append(row[15])
                 print('Transactions ID', self.transaction_IDs)
@@ -122,8 +119,6 @@ class NewMultiCriteria:
 
         if self.rule[1] == operands[5]:#<#
             if (self.client_transaction[self.rule[0]] < self.rule[2]).any():
-                self.cur.execute("SELECT * FROM SMI_DB.SuspiciousTransaction WHERE clientID=%s " % (clientID))
-                self.client_suspious_transaction = self.cur.fetchall()
                 for row in self.client_suspious_transaction:
                     self.transaction_IDs.append(row[15])
                 print('Transactions ID', self.transaction_IDs)
@@ -145,9 +140,6 @@ class NewMultiCriteria:
 
         if self.rule[1] == operands[6]:#>#
              if (self.client_transaction[self.rule[0]] > self.rule[2]).any():
-
-                self.cur.execute("SELECT * FROM SMI_DB.SuspiciousTransaction WHERE clientID=%s " % (clientID))
-                self.client_suspious_transaction = self.cur.fetchall()
                 for row in self.client_suspious_transaction:
                     self.transaction_IDs.append(row[15])
                 print('Transactions ID', self.transaction_IDs)
@@ -168,8 +160,6 @@ class NewMultiCriteria:
 
         if self.rule[1] == operands[7]:#<=#
             if (self.client_transaction[self.rule[0]] <= self.rule[2]).any():
-                self.cur.execute("SELECT * FROM SMI_DB.SuspiciousTransaction WHERE clientID=%s " % (clientID))
-                self.client_suspious_transaction = self.cur.fetchall()
                 for row in self.client_suspious_transaction:
                     self.transaction_IDs.append(row[15])
                 print('Transactions ID', self.transaction_IDs)
@@ -190,8 +180,6 @@ class NewMultiCriteria:
 
         if self.rule[1] == operands[8]:  # >=#
             if (self.client_transaction[self.rule[0]] >= self.rule[2]).any():
-                self.cur.execute("SELECT * FROM SMI_DB.SuspiciousTransaction WHERE clientID=%s " % (clientID))
-                self.client_suspious_transaction = self.cur.fetchall()
                 for row in self.client_suspious_transaction:
                     self.transaction_IDs.append(row[15])
                 print('Transactions ID', self.transaction_IDs)
