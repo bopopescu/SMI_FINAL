@@ -517,15 +517,23 @@ def manageBankData():
             print(dest)
             file1.save(dest)
             cur.execute("SELECT * FROM Bank_DB.transaction LIMIT 1")
-            with open(dest) as f:
-                data = json.load(f)
+            try:
+                with open(dest) as f:
+                    data = json.load(f)
 
-            print(data)
+                print(data)
+            except Exception as e:
+                flash('Sorry...your file is not well structured... please follow the file format in the sample',
+                      'danger')
+                return render_template("ManageBankData.html", form=form, form2=search_form, form3=form3,
+                                       FB_flag=FB_flag, alert=totalAlert)
+
             i = 1
+
             ## 1- check file structure ##
             if 'Rules' not in data:
-                print('ERROR...your file is not well structured... please follow the file format in the sample')
-                flash('ERROR...your file is not well structured... please follow the file format in the sample',
+                print('Sorry...your file is not well structured... please follow the file format in the sample')
+                flash('Sorry...your file is not well structured... please follow the file format in the sample',
                       'danger')
                 return render_template("ManageBankData.html", form=form, form2=search_form, form3=form3,
                                        FB_flag=FB_flag , alert = totalAlert)
@@ -1017,6 +1025,23 @@ def Report(id):
 
         flash('Email has been sent Successfully..', 'success')
     return render_template("email.html", form = form, clientID= id , alert = totalAlert , form2=search_form )
+
+@app.route('/BussinseRuleGuide', methods=['GET','POST'])
+def BR_GUIDE():
+
+    if session.get('username') == None:
+        return redirect(url_for('home'))
+
+    search_form = SearchForm()
+    # alert code
+    cur, db, engine = connection2()
+    query = "SELECT * FROM SMI_DB.ClientCase WHERE viewed ='1'"
+    cur.execute(query)
+    totalAlert = cur.fetchall()
+    totalAlert = len(totalAlert)
+    print(totalAlert)
+    socketio.emit('count-update', {'count': totalAlert})
+    return render_template('BussinseRuleGuide.html',form2=search_form ,alert = totalAlert)
 
 
 
