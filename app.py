@@ -23,8 +23,7 @@ import json
 from flask_socketio import SocketIO
 from flask_socketio import send, emit
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
-
-
+from celery.result import AsyncResult
 
 
 app = Flask(__name__)
@@ -1049,11 +1048,12 @@ def BR_GUIDE():
 
 @app.route('/startAnalysis')
 def startAnalysis():
-    return render_template_string('''<a href="{{ url_for('enqueue') }}">start</a>''')
+    return render_template_string('''<a href="{{ url_for('start') }}">start</a>''')
 
 @app.route('/enqueue')
-def enqueue():
-    task = Analysis.delay()
+def start():
+    task = Analysis.delay(0)
+    taskID= task.task_id
     form2 = SearchForm()
     cur, db, engine = connection2()
     query = "SELECT * FROM SMI_DB.ClientCase WHERE viewed ='1'"
@@ -1061,9 +1061,40 @@ def enqueue():
     totalAlert = cur.fetchall()
     totalAlert = len(totalAlert)
     print(totalAlert)
-    socketio.emit('count-update', {'count': totalAlert})
+    return render_template("analysisView.html", form2=form2, alert=totalAlert)
 
-    return render_template('analysisView.html', JOBID=task.id, form2=form2 , alert = totalAlert)
+
+
+
+@app.route('/status/<task_id>')
+def taskstatus(task_id):
+    task = Analysis.AsyncResult(task_id)
+    if task.state == 'PENDING':
+        # job did not start yet
+        response = {
+            'state': task.state,
+            'current': 0,
+            'total': 1,
+            'status': 'Pending...'
+        }
+    elif task.state != 'FAILURE':
+        response = {
+            'state': task.state,
+            'current': task.info.get('current', 0),
+            'total': task.info.get('total', 1),
+            'status': task.info.get('status', '')
+        }
+        if 'result' in task.info:
+            response['result'] = task.info['result']
+    else:
+        # something went wrong in the background job
+        response = {
+            'state': task.state,
+            'current': 1,
+            'total': 1,
+            'status': str(task.info),  # this is the exception raised
+        }
+    return jsonify(response)
 
 
 @app.route('/analysisView')
@@ -1102,9 +1133,9 @@ def progress():
     return '{}'
 
 @celery.task
-def Analysis():
+def Analysis(id):
     d = Detection()
-    d.Detect()
+    d.Detect(id)
     #print('Businse Rule ID',id)
 
 if __name__ == "__main__":
