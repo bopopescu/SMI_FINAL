@@ -997,28 +997,37 @@ def Report(id):
 
     #######save case to working dierctory ##########
     pdfFile = pdfkit.from_string(rendered, 'case.pdf')
-    #request.files.get('file_case') = pdfFile
-    #request.form['file_case'] = pdfFile
+
     form.subject.data = 'Case#{}_{}'.format(id,clientName)
     form.email_body.data = 'Fruad Report'
 
     if form.validate_on_submit():
-        '''target = os.path.join(APP_ROOT, 'Case_file/')
+
+        target = os.path.join(APP_ROOT, 'Case_file/')
         print('target',target)
         if not os.path.isdir(target):
             os.mkdir(target)
         file = request.files.get('file_case')
-        print('file',file)
-        filename = file.filename
-        print('fileNAME',filename)
-        dest = "/".join([target, filename])
-        print(dest)
-        file.save(dest)'''
+        try:
+            filename = file.filename
+            print('fileNAME',filename)
+            dest = "/".join([target, filename])
+            print(dest)
+            file.save(dest)
+            fileType= filename.split(".")[0]+"/"+filename.split(".")[1]
+            filename = 'Case_file/'+filename
+        except Exception as e:
+            filename= "case.pdf"
+            fileType = "case/pdf"
+
+
+
+
         recipient = form.reciver.data
         msg = Message(form.subject.data, recipient.split())
         msg.body = form.email_body.data
-        with app.open_resource("case.pdf") as fp:
-            msg.attach("case.pdf", "case/pdf", fp.read())
+        with app.open_resource(filename) as fp:
+            msg.attach(filename, fileType, fp.read())
         print(msg)
         mail.send(msg)
 
