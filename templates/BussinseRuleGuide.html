@@ -125,9 +125,21 @@
             </ul>
           </li>
           <!-- Control Sidebar Toggle Button -->
+        <li>
+
+            <a class="translate" id ="en" >English</a>
+
+        </li>
+        <li>
+            <a class="translate" id ="ar" >Arabic</a>
+        </li>
+
+
           <li>
           <a href="/logout"><i class="fa fa-sign-out"></i></a>
           </li>
+
+
         </ul>
       </div>
     </nav>
@@ -161,7 +173,7 @@
 
         <li>
           <a href="{{ url_for('home') }}">
-            <i class="fa fa-home"></i> <span>Home</span>
+            <i class="fa fa-home"></i> <span class="lang" key="home">Home</span>
 
           </a>
         </li>
@@ -330,11 +342,9 @@
 
 
               <div class="box-footer">
-              <div style="margin-left:38%;">
+              <div style="margin-left:30%;">
+                <a href= "{{ url_for('send_file') }}" class="btn btn-default" >Download Sample &nbsp;  <i class="fa fa-save"></i></a>
 
-                  <a href= ' ' class="btn btn-default" > Report</a>
-                  &nbsp; &nbsp;
-                  <a href= ' ' class="btn btn-default" > View Client Profile</a>
               </div>
               </div>
           </div>
@@ -359,6 +369,31 @@
 </div>
 <!-- ./wrapper -->
 
+
+<!-- Transelate code -->
+
+<script>
+    var arrLang ={
+        'en' : {
+            'home': 'Home',
+            'about': 'About',
+            'contact': 'Contact Us'
+        },
+        'ar' : {
+             'home': 'الصفحة الرئيسية',
+            'about': 'عنا',
+            'contact': 'اتصل بنا'
+        }
+    };
+    $(function () {
+        $('.translate').click(function () {
+            var lang = $(this).attr('id');
+            $('.lang').each(function (index , element) {
+                $(this).text(arrLang[lang][$(this).attr('key')]);
+            });
+        });
+    });
+</script>
 
 <script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
 

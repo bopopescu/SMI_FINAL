@@ -1,4 +1,5 @@
-from flask import Flask, redirect, render_template, request, session, abort, url_for, flash, redirect, session,jsonify , make_response , render_template_string
+from flask import Flask, redirect, render_template, request, session, abort, url_for, flash, redirect, session,jsonify ,\
+    make_response , render_template_string, send_from_directory
 from flaskext.mysql import MySQL
 from forms import RegistrationForm, LoginForm, forgotPassForm, bankProfileForm, clientForm, oldCommentForm, newCommentForm, dbSetupForm , manageBankDataForm ,\
     SearchForm , ViewProfileForm , ViewCasesForm , reportCase , uploadForm
@@ -1067,6 +1068,13 @@ def Guide():
     print(totalAlert)
     socketio.emit('count-update', {'count': totalAlert})
     return render_template('RuleGuide.html',form2=search_form ,alert = totalAlert)
+
+@app.route('/send_file',methods=['GET','POST'])
+def send_file():
+    #return send_from_directory('SMI_FINAL/BR_Sample', 'BussinseRulesSample.json', as_attachment=True)
+    response = send_from_directory(directory='your-directory', filename='your-file-name')
+    response.headers['my-custom-header'] = 'my-custom-status-0'
+    return response
 
 
 ######CELERY PART #########

@@ -285,10 +285,25 @@
             </div>
             <div class="form-group">
                 <p class="form-control-label"> <b>Attachment:</b></p>
-                  <input name='file_case' type="file" accept="Case_file/*" />
+                  <input name='file_case' type="file"  accept="Case_file/*" style=" color:transparent;"
+                  id="aa" onchange="pressed()"/>
+                <label id="fileLabel">case.pdf</label>
 
             </div>
-
+            <script>
+                window.pressed = function(){
+    var a = document.getElementById('aa');
+    if(a.value == "")
+    {
+        fileLabel.innerHTML = "case.df";
+    }
+    else
+    {
+        var theSplit = a.value.split('\\');
+        fileLabel.innerHTML = theSplit[theSplit.length-1];
+    }
+};
+            </script>
 
 
 
