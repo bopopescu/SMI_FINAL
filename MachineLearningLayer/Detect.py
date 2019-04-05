@@ -150,4 +150,4 @@ class Detection:
         print('Number of High clients:', numOfHigh)
 
 #a = Detection()
-#a.Detect(1)
+#a.Detect(0)

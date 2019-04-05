@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title> SMI | Database Config</title>
+  <title> SMI | Business Rules Guide</title>
+  <!-- Tell the browser to be responsive to screen width -->
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 3.3.7 -->
+    <!-- Bootstrap 3.3.7 -->
 
       <link href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
 
@@ -23,21 +24,13 @@
    <link href="{{ url_for('static', filename='dist/css/skins/_all-skins.min.css') }}" rel="stylesheet">
 
 
-
-
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-
-                 <!-- Start Translation code -->
-
-              <!-- This line adds jquery to the page, otherwise the script tags at the bottom will not run -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-    <!-- Google Translate Element begin -->
+       <!-- Google Translate Element begin -->
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
@@ -99,15 +92,17 @@
     </style>
                <!-- End Translation code -->
 
-
+    <!-- For embdding code -->
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 
   <!-- Google Font -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-</head>
-<body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper"  >
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+      </head>
+      <body class="hold-transition skin-blue sidebar-mini">
+      <div class="wrapper"  >
 
-  <header class="main-header">
+      <header class="main-header">
     <!-- Logo -->
     <a href="../../index2.html" class="logo" style="background-color:#0f5757;">
       <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -265,130 +260,153 @@
         </li>
 
       </ul>
+
+
     </section>
     <!-- /.sidebar -->
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}" style="font-size:125%; opacity:0.8;">
-                {{ message }}
-                </div>
-
-            {% endfor %}
-
-        {% endif %}
-    {% endwith %}
-
-    <div class="container">
-
-      <section class="content-header">
-
-        <ol class="breadcrumb">
-          <li><a href="home.html"><i class="fa fa-home"></i> Home</a></li>
-          <li><a href="bankProfle.html">Profile</a></li>
-          <li class="active">Database Config</li>
-        </ol>
-      </section>
-
-    <h1>Database Configuration</h1>
-	<div class="row">
-      <!-- left column -->
-
-      <!-- edit form column -->
-
-      <div class="col-md-9 personal-info">
-        <h3 style="color:#004D40;"> <b>Database info</b></h3>
-
-        <form action="" method="post" class="form-horizontal" role="form" {% if status==0 %}
-            onsubmit="return confirm('Are you sure you want to change your old database connection?')"
-        {% endif %}>
-            {{form.hidden_tag()}}
-
-          <div class="form-group">
-              {{form.db_user.label(class="col-lg-3 control-label",style="text-align:left;")}}
-                {% if form.db_user.errors %}
-                        {{ form.db_user(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.db_user.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                     <div class="col-lg-8">
-                        {{ form.db_user(class="form-control") }}
-                    </div>
-                    {% endif %}
-            </div>
-              <div class="form-group">
-              {{form.db_pass.label(class="col-lg-3 control-label",style="text-align:left;")}}
-                {% if form.db_pass.errors %}
-                        {{ form.db_pass(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.db_pass.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                     <div class="col-lg-8">
-                        {{ form.db_pass(class="form-control") }}
-                    </div>
-                    {% endif %}
-            </div>
-            <div class="form-group">
-              {{form.db_name.label(class="col-lg-3 control-label",style="text-align:left;")}}
-                {% if form.db_name.errors %}
-                        {{ form.db_name(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.db_name.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                     <div class="col-lg-8">
-                        {{ form.db_name(class="form-control") }}
-                    </div>
-                    {% endif %}
-            </div>
-            <div class="form-group">
-              {{form.db_host.label(class="col-lg-3 control-label",style="text-align:left;")}}
-                {% if form.db_host.errors %}
-                        {{ form.db_host(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.db_host.errors %}
-                                <span style="color: red;">{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                     <div class="col-lg-8">
-                        {{ form.db_host(class="form-control") }}
-                    </div>
-                    {% endif %}
-            </div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
 
 
-          <div class="form-group">
-            <label class="col-md-3 control-label"></label>
-            <div class="col-md-8" id="wrapperH">
-                 {{ form.submit(class="btn btn-default") }}
+      <ol class="breadcrumb">
+         <li><a href="{{ url_for('home') }}"><i class="fa fa-home"></i> Home</a></li>
+          <li><a href="{{ url_for('bankP') }}">Profile</a></li>
+        <li class="active">Case</li>
+
+      </ol>
+    </section>
+</br>
+    <!-- Main content -->
+    <section class="content">
+      <!-- Profile Image -->
+    <div class="col-md-9">
+      <div class="box box-default" style="margin-left:10%;">
+        <div class="box-body box-profile">
+
+            <h3> Business Rules Guide</h3>
+
+
+
+        </br>
+         <hr>
+          <!-- /.box-header -->
+          <div class="box-body">
+
+
+              <p>This Guide will help you writing you own business rules</p>
+
+            <p class="text-muted">
+
+
+            </p>
+               <strong>1-File Format</strong>
+
+             <p class="text-muted">Your rules files must be in json format (.json)</p>
+
+                <strong>2-File Structure</strong>
+
+             <p class="text-muted">After creating a JSON, your file must start with the key word "Rules" to include all your rules inside it later on </p>
+              <pre class="prettyprint">{"Rules" : {}}
+              </pre>
+
+              <strong>3-Writing the rules </strong>
+
+             <p class="text-muted"> You will start writing the first rule inside "Rules" node, each rule should be indicated by "Rule" keyword followed by the rule number
+             as shown in the example, it's important that the rules numbers to be sequntially and start with number 1 </p>
+              <pre class="prettyprint">{"Rules" : {"Rule1" : [] }}
+
+              </pre>
+
+               <p class="text-muted"> The rule should start with the attribute you want to check, its important for the attribute to be in the database otherwise the file won't be accepted </p>
+              <pre class="prettyprint">{"Rules" : {"Rule1" : ["variable1"] }}
+
+              </pre>
+
+              <p class="text-muted"> After writing the variable you can check it by adding the operand , the variable and the operand should be sperated by a comma.
+              legal operands (<,>,==,<=,>=)</p>
+              <pre class="prettyprint">{"Rules" : {"Rule1" :["variable1","=="] }}
+
+              </pre>
+
+              <p class="text-muted"> Then you write the value you want to check sperated by a comma from the operand </p>
+              <pre class="prettyprint">{"Rules" : {"Rule1" :["variable1","==","value"] }}
+
+              </pre>
+
+               <p class="text-muted"> If you want to add more rules you should repate the steps, the result should look like this:</p>
+              <pre class="prettyprint">{"Rules" : {"Rule1" :["variable1","==","value"],
+             "Rule2" :["variable1","==","value"]}}
+
+              </pre>
+
+              <strong>4-Adding Sanction List </strong>
+
+             <p class="text-muted"> You will start writing the first rule inside "Rules" node, each rule should be indicated by "Rule" keyword followed by the rule number
+             as shown in the example, it's important that the rules numbers to be sequntially and start with number 1 </p>
+              <pre class="prettyprint">{"Rules" : {"Rule1" : [] }}
+
+              </pre>
+
+              <strong>5-Adding High risk countries </strong>
+
+             <p class="text-muted"> You will start writing the first rule inside "Rules" node, each rule should be indicated by "Rule" keyword followed by the rule number
+             as shown in the example, it's important that the rules numbers to be sequntially and start with number 1 </p>
+              <pre class="prettyprint">{"Rules" : {"Rule1" : [] }}
+
+              </pre>
+
+
+
+            <hr>
+
+
+
+
+
+
+
             </div>
 
+
+
+
+
+
+              <div class="box-footer">
+              <div style="margin-left:38%;">
+
+                  <a href= ' ' class="btn btn-default" > Report</a>
+                  &nbsp; &nbsp;
+                  <a href= ' ' class="btn btn-default" > View Client Profile</a>
+              </div>
+              </div>
           </div>
-        </form>
+          <!-- /.box-body -->
+        </div>
+
+        <!-- /.box-body -->
+
       </div>
-  </div>
-</div>
-  </div>
 
-  <div class="control-sidebar-bg"></div>
+
+      </div>
+
+      <!-- /.box -->
+  </section>
+
+        <!-- /. box -->
+          <br><br><br><br><br><br><br><br><br><br>  <br><br><br><br><br><br><br><br><br><br>  <br><br><br><br><br><br><br><br><br><br>
+
+
 </div>
+
+      </div>
+
 <!-- ./wrapper -->
-
 
 <script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
 
@@ -403,5 +421,7 @@
 
 
 <script src="{{ url_for('static', filename='dist/js/adminlte.min.js') }}"></script>
+
 </body>
+
 </html>

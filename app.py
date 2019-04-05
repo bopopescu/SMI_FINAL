@@ -475,7 +475,7 @@ def manageBankData():
                                    FB_flag=FB_flag , alert = totalAlert)
         #treger code
         if status == 0:
-            task = Analysis.delay()
+            task = Analysis.delay(0)
             form2 = SearchForm()
             flash('Successfully uploaded your business rules..', 'success')
             return render_template('analysisView.html', JOBID=task.id, form2=form2 , alert = totalAlert)
@@ -1025,6 +1025,7 @@ def Report(id):
         flash('Email has been sent Successfully..', 'success')
     return render_template("email.html", form = form, clientID= id , alert = totalAlert , form2=search_form )
 
+@register_breadcrumb(app, '.manageProfile', 'Edit Profile')
 @app.route('/BussinseRuleGuide', methods=['GET','POST'])
 def BR_GUIDE():
 
@@ -1042,6 +1043,21 @@ def BR_GUIDE():
     socketio.emit('count-update', {'count': totalAlert})
     return render_template('BussinseRuleGuide.html',form2=search_form ,alert = totalAlert)
 
+@app.route('/RuleGuide', methods=['GET','POST'])
+def Guide():
+    if session.get('username') == None:
+        return redirect(url_for('home'))
+
+    search_form = SearchForm()
+    # alert code
+    cur, db, engine = connection2()
+    query = "SELECT * FROM SMI_DB.ClientCase WHERE viewed ='1'"
+    cur.execute(query)
+    totalAlert = cur.fetchall()
+    totalAlert = len(totalAlert)
+    print(totalAlert)
+    socketio.emit('count-update', {'count': totalAlert})
+    return render_template('RuleGuide.html',form2=search_form ,alert = totalAlert)
 
 
 ######CELERY PART #########
@@ -1135,7 +1151,7 @@ def progress():
 @celery.task
 def Analysis(id):
     d = Detection()
-    d.Detect(id)
+    d.Detect(1)
     #print('Businse Rule ID',id)
 
 if __name__ == "__main__":

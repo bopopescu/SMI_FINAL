@@ -89,7 +89,7 @@ class NewMultiCriteria:
             self.cur.execute("UPDATE SMI_DB.Client SET custom_BR='%s' where clientID='%s'" % (self.allRules, self.clientID))
             self.db.commit()
 
-        return MultiCriteriaScore, self.allRules
+        return MultiCriteriaScore
 
 
 
@@ -221,6 +221,6 @@ highRiskCountries = fb.child('highRiskCountries').get().val()
 MultiLevelRules = fb.child('MultiLevelRules').get().val()
 
 a = NewMultiCriteria()
-mc_score, rules = a.getRules(Rules,sanctionList,highRiskCountries,MultiLevelRules,1966002811)
+mc_score = a.getRules(Rules,sanctionList,highRiskCountries,MultiLevelRules,1966002811)
 
 print(rules)'''
