@@ -352,8 +352,9 @@ def manageProfile():
     if form.profile_submit.data and form.validate_on_submit():
         cursor.execute("SELECT * FROM AMLOfficer WHERE email = '" + form.email.data + "'")
         data2 = cursor.fetchone()
-        if not (data2 is None):
-            flash('This Email is already exists please try another email', 'danger')
+        if (not (data2 is None)) and ( data2[0] != username):
+
+            flash('This Email is already used by another user please try another email', 'danger')
             return render_template('ManageProfile.html', form=form , form2 = search_form , alert = totalAlert)
         else:
             cur, db , engine = connection2()
