@@ -317,6 +317,7 @@ function myFunc() {
 
                       <input name='file_br' type="file" accept="key_words/*" required />
                          <p class="help-block">file extention, .txt</p>
+                       {% if fileEx==1 %} <p class="help-block" style="color:red;">file extention must be .txt</p>{% endif %}
 
                     </div>
 
