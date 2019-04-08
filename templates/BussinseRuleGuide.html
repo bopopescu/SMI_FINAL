@@ -181,27 +181,42 @@
 
              <li class="treeview">
           <a href="#">
-            <i class="fa fa-edit"></i> <span>Manage Bank Data</span>
+            <i class="fa fa-gear"></i> <span class="lang" key="set">Settings</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-           <li><a href="{{ url_for('DatabaseSetup') }}"> Database Setup</a></li>
-            <li><a href="{{ url_for('manageBankData') }}">business Rules Setup</a></li>
+           <li> <a  class="lang" key="data" href="{{ url_for('DatabaseSetup') }}">Database Setup</a></li>
+            <li><a class="lang" key="bus" href="{{ url_for('manageBankData') }}">Business Rules Setup</a></li>
 
           </ul>
         </li>
-        <li>
-          <a href="{{ url_for('manageProfile') }}">
-          <span>Manage Profile</span>
+
+
+
+         <li>
+          <a href="{{ url_for('manageProfile') }}" >
+               <i class="fa fa-edit"></i>
+          <span class="lang" key="edit">Edit Profile</span>
           </a>
         </li>
 
 
           <li>
            <a href="{{ url_for('cases') }}">
-          <span>View Cases</span>
+                 <i class="fa fa-folder-open"></i>
+          <span class="lang" key="view">View Cases</span>
+            <span class="pull-right-container">
+
+            </span>
+          </a>
+        </li>
+
+              <li>
+           <a href="{{ url_for('BR_GUIDE') }}">
+                 <i class="fa fa-file-code-o"></i>
+          <span class="lang" key="guide">Business Rules Guide</span>
             <span class="pull-right-container">
 
             </span>
@@ -252,7 +267,7 @@
 
              <div class="box-body box-profile" style="margin-left:5%;">
 
-            <h3> Business Rules Guide</h3>
+            <h3 class="lang" key="guideTitle"> Business Rules Guide</h3>
 
 
 
@@ -262,19 +277,19 @@
           <div class="box-body">
 
 
-              <p>This Guide will help you writing you own business rules</p>
+              <p class="lang" key="guideDes" >This Guide will help you writing you own business rules</p>
 
             <p class="text-muted">
 
 
             </p>
-               <strong>1-File Format</strong>
+               <strong class="lang" key="guidePoint1" >1-File Format</strong>
 
-             <p class="text-muted">Your rules files must be in json format (.json)</p>
+             <p  class="lang" key="test" >Your rules files must be in json format </p>
 
                 <strong>2-File Structure</strong>
 
-             <p class="text-muted">After creating a JSON, your file must start with the key word "Rules" to include all your rules inside it later on </p>
+             <p class="text-muted"  class="lang" key="guidePoint1p1" >After creating a JSON, your file must start with the key word "Rules" to include all your rules inside it later on </p>
               <pre class="prettyprint">{"Rules" : {}}
               </pre>
 
@@ -376,13 +391,32 @@
     var arrLang ={
         'en' : {
             'home': 'Home',
-            'about': 'About',
-            'contact': 'Contact Us'
+            'search': 'Search For Client',
+            'edit': 'Edit Profile',
+            'view': 'View Cases',
+            'guide': 'Business Rules Guide',
+            'set': 'Settings',
+            'data': 'Database Setup',
+            'bus': 'Business Rules Setup',
+            'guideTitle': 'Business Rules Guide',
+            'guideDes': 'This Guide will help you writing you own business rules',
+            'guidePoint1':  '1-File Format',
+            'test':  'Your rules files must be in json format'
         },
         'ar' : {
              'home': 'الصفحة الرئيسية',
-            'about': 'عنا',
-            'contact': 'اتصل بنا'
+            'search': 'البحث عن عميل',
+            'edit': 'تعديل الملف الشخصي',
+            'view': 'عرض القضايا',
+            'guide': 'دليل كتابة اللوائح',
+             'set': 'إعدادات',
+            'data': 'إعدادت قاعدة البيانات',
+            'bus': 'إعدادات اللوائح',
+            'guideTitle': 'دليل كتابة اللوائح',
+            'guideDes': 'هذا الدليل سيساعدك في كتابة اللوائح الخاصة بك',
+            'guidePoint1':  '١- صيغة الملف',
+            'test':  'ملف اللوائح يجب أن يكون بصيغة جسون '
+
         }
     };
     $(function () {
