@@ -2,7 +2,7 @@ from flask import Flask, redirect, render_template, request, session, abort, url
     make_response , render_template_string, send_from_directory, send_file, Response
 from flaskext.mysql import MySQL
 from forms import RegistrationForm, LoginForm, forgotPassForm, bankProfileForm, clientForm, oldCommentForm, newCommentForm, dbSetupForm , manageBankDataForm ,\
-    SearchForm , ViewProfileForm , ViewCasesForm , reportCase , uploadForm
+    SearchForm , ViewProfileForm , ViewCasesForm , reportCase , uploadForm, uploadKeywords
 from DBconnection import connection2, BankConnection , firebaseConnection
 from passwordRecovery import passwordRecovery
 from datetime import datetime
@@ -352,7 +352,7 @@ def manageProfile():
     if form.profile_submit.data and form.validate_on_submit():
         cursor.execute("SELECT * FROM AMLOfficer WHERE email = '" + form.email.data + "'")
         data2 = cursor.fetchone()
-        if (not (data2 is None)) and ( data2[0] != username):
+        if (not (data2 is None)) and (data2[0] != username):
 
             flash('This Email is already used by another user please try another email', 'danger')
             return render_template('ManageProfile.html', form=form , form2 = search_form , alert = totalAlert)
@@ -1086,6 +1086,61 @@ def return_file():
    return send_from_directory('BR_Sample/', 'BussinseRulesSample.json', as_attachment=True, mimetype='application/json',
                        attachment_filename='BussinseRulesSample.json')
 
+
+@app.route("/keyword", methods=['GET', 'POST'])
+def keyword():
+    # Only logged in users can access bank profile
+    if session.get('username') == None:
+        return redirect(url_for('home'))
+
+     # alert code
+    cur, db, engine = connection2()
+    query = "SELECT * FROM SMI_DB.ClientCase WHERE viewed ='1'"
+    cur.execute(query)
+    totalAlert = cur.fetchall()
+    totalAlert = len(totalAlert)
+    print(totalAlert)
+    socketio.emit('count-update', {'count': totalAlert})
+
+    search_form = SearchForm()
+    form3 = uploadKeywords()
+
+    # upload BR
+    if form3.submit.data and form3.validate_on_submit():
+        print('iam in keywords')
+
+        target = os.path.join(APP_ROOT, 'key_words/')
+        # print(target)
+        if not os.path.isdir(target):
+            os.mkdir(target)
+
+        file = request.files.get('file_br')
+        filename = file.filename
+        print(filename)
+
+        if filename.split(".", 1)[1] != 'txt':
+            flash('File extention should be txt', 'danger')
+            return render_template("keyword.html", form2=search_form,
+                                   form3=form3, alert=totalAlert)
+
+        else:
+            dest = "/".join([target, filename])
+            print(dest)
+            file.save(dest)
+
+        keywords = open("key_words/" + filename, "r")
+
+        # query = "INSERT INTO SMI_DB.KeyWords (wordID, word) VALUES (%s , %s)"
+        # key = keywords.read().splitlines()
+        # val = (100 ,key)
+
+        query = "LOAD DATA LOCAL INFILE 'filename' INTO TABLE KeyWords;"
+        cur.execute(query)
+
+    if search_form.search_submit.data and search_form.validate_on_submit():
+        return redirect((url_for('searchResult', id=search_form.search.data, form2=search_form , form3= form3 , alert = totalAlert)))
+
+    return render_template("keyword.html" ,  form2=search_form , form3 = form3 , alert = totalAlert)
 
 ######CELERY PART #########
 

@@ -94,7 +94,9 @@ class uploadForm(FlaskForm):
     submitRule = SubmitField('Submit')
 
 
-
+class uploadKeywords(FlaskForm):
+    businessRules_file = FileField('Upload Keywords:')
+    submit = SubmitField('Upload')
 
 
 #Manage bank data from
