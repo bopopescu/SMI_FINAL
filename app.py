@@ -896,7 +896,7 @@ def DatabaseSetup():
             config.write(configfile)
         status, cur, db, engine= BankConnection()
         if status == 1:
-            flash('Unable to connect please try again..', 'danger')
+            flash('Invalid database credentials, please try again.', 'danger')
             return render_template("databaseSetup.html", form=form, status = status ,
                                    form2=search_form, form3=form3 , alert = totalAlert)
         else:
