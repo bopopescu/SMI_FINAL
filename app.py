@@ -1,3 +1,4 @@
+from webui import WebUI # Add WebUI to your imports
 from flask import Flask, redirect, render_template, request, session, abort, url_for, flash, redirect, session,jsonify ,\
     make_response , render_template_string, send_from_directory, send_file, Response
 from flaskext.mysql import MySQL
@@ -28,6 +29,7 @@ from celery.result import AsyncResult
 
 
 app = Flask(__name__)
+#ui = WebUI(app, debug=True)
 
 
 
@@ -141,13 +143,14 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        cur, db, engine = connection2()
         # Checking If the account(user_name) is already registered.
-        cursor.execute("SELECT * FROM AMLOfficer WHERE userName = '" + form.username.data + "'")
-        data1 = cursor.fetchone()
+        cur.execute("SELECT * FROM AMLOfficer WHERE userName = '" + form.username.data + "'")
+        data1 = cur.fetchall()
 
         # Checking If the account(email) is already registered.
-        cursor.execute("SELECT * FROM AMLOfficer WHERE email = '" + form.email.data + "'")
-        data2 = cursor.fetchone()
+        cur.execute("SELECT * FROM AMLOfficer WHERE email = '" + form.email.data + "'")
+        data2 = cur.fetchall()
 
         if not (data1 is None):
             flash('This Username is already registered please try another username', 'danger')
@@ -156,7 +159,7 @@ def register():
             flash('This Email is already registered please try another email', 'danger')
             return render_template('Register.html', form=form)
         else:
-            cur, db , engine = connection2()
+
             query = "INSERT INTO AMLOfficer (userName, email, fullname, password) VALUES(%s,%s,%s,%s)"
             val = (form.username.data, form.email.data, form.fullName.data, form.password.data)
             cur.execute(query, val)
@@ -749,7 +752,7 @@ def case(id):
         if client_BR[3] == '1':
             Br_dic['4'] = 'Client exceeded max amount of transaction'
 
-    if client_custom_BR is None:
+    if (client_custom_BR is None) or (not ("1" in client_custom_BR)):
         Custom_BR_flag = False
 
     else:
@@ -1269,3 +1272,4 @@ def Analysis(id):
 
 if __name__ == "__main__":
     app.run(debug =True)
+    #ui.run()  # replace app.run() with ui.run(), and that's it

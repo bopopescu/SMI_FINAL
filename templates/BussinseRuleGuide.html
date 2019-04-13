@@ -30,13 +30,25 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 <script src="{{ url_for('static', filename='bower_components/jquery/dist/jquery.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
      <!-- For embdding code -->
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" onload="javascript:SomeFunction()">
+
+ <script>
+function SomeFunction() {
+  var r = confirm("Are you sure you want to logout?");
+
+}
+</script>
+
+
 <div class="wrapper">
 
   <header class="main-header">
@@ -459,6 +471,10 @@
     $(function () {
         $('.translate').click(function () {
             var lang = $(this).attr('id');
+            //Cookies.set('choice',lang);
+            $.cookie("choice", lang);
+            //var choice = Cookies.get('choice');
+            alert(lang);
             $('.lang').each(function (index , element) {
                 $(this).text(arrLang[lang][$(this).attr('key')]);
             });

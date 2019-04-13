@@ -120,7 +120,7 @@ class Detection:
             print('client ID: ', id)
             print('client Name: ', name)
             print('Multi Criteria Score: ',mc_class)
-            print('Before IF statment', profile_class)
+            #print('Before IF statment', profile_class)
             print('search_result: ', GeneralSearch_result)
             print('transaction_class: ', transaction_class)
             print('GeneralSearch_class: ', GeneralSearch_class)
